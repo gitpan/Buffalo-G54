@@ -1,10 +1,13 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         Buffalo-G54
-version:      0.01
-version_from: lib/Buffalo/G54.pm
-installdirs:  site
-requires:
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.30
+--- #YAML:1.0
+name:                Buffalo-G54
+version:             0.02
+abstract:            Limited scraping API for Buffalo WBR2-G54 routers
+license:             ~
+generated_by:        ExtUtils::MakeMaker version 6.31
+distribution_type:   module
+requires:     
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
+    version: 1.2
+author:
+    - Mike Schilli <cpan@perlmeister.com>

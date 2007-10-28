@@ -61,7 +61,7 @@ use strict;
 use warnings;
 use Log::Log4perl qw(:easy);
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 ###########################################
 sub new {
@@ -216,17 +216,6 @@ sub wireless_on {
     $agent->form_number(1);
     $agent->field("wl_radio", "1");
     $agent->submit_form(form_number => "1");
-
-#$agent->field("wl_pwrout_per", "100");
-#$agent->field("wl_frameburst", "on");
-#$agent->field("action_melco", "ad-lan-wireless2");
-#$agent->field("wl_ssid_input", $SSID);
-#$agent->field("wl_dtim", "1");
-#$agent->field("wl_rateset", "default");
-#$agent->field("wl_channel", "11");
-#$agent->field("wl_ps", "1");
-#$agent->field("wl_gmode", "5");
-#$agent->field("wl_g_protect", "auto");
 }
 
 ###########################################
@@ -242,6 +231,48 @@ sub wireless_off {
     $agent->form_number(1);
     $agent->field("wl_radio", "0");
     $agent->submit_form(form_number => "1");
+}
+
+###########################################
+sub lan_proto {
+###########################################
+    my($self, $proto) = @_;
+
+    my $agent = $self->{agent};
+
+    $self->geturl("/advance/ad-lan-dhcp.htm");
+    my $form = $agent->form_number(1);
+
+    if(defined $proto) {
+        $agent->field("lan_proto", $proto);
+        $agent->submit_form(form_number => "1");
+    } else {
+        return $form->find_input("lan_proto")->value();
+    }
+}
+
+###########################################
+sub dhcp {
+###########################################
+    my($self, $status) = @_;
+
+    if(defined $status) {
+        if($status eq "on") {
+            $self->lan_proto("dhcp");
+        } elsif($status eq "off") {
+            $self->lan_proto("static");
+        }
+    }
+
+    my $lan_proto = $self->lan_proto();
+
+    if($lan_proto eq "dhcp") {
+        return 1;
+    } elsif ($lan_proto eq "static") {
+        return 0;
+    } else { 
+        LOGDIE "Unknown return lan_proto value";
+    }
 }
 
 ###########################################
@@ -342,6 +373,17 @@ Note that switching the wireless network on and off requires having
 set up the wireless network in the first place. C<wireless()> is just
 going to toggle the on/off switch, it doesn't configure the SSID,
 encryption and other important settings.
+
+=item C<$buf-E<gt>dhcp($status)>
+
+Turns the DHCP server on or off or queries its status:
+
+    $buf->dhcp("on");
+    $buf->dhcp("off");
+
+    if($buf->dhcp() eq "on") {
+        print "dhcp is on!\n";
+    }
 
 =back
 

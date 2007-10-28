@@ -1,5 +1,5 @@
 ######################################################################
-    WWW::Mechanize::Retry 0.01
+    WWW::Mechanize::Retry 0.02
 ######################################################################
 
 NAME
@@ -62,6 +62,16 @@ DESCRIPTION
         set up the wireless network in the first place. "wireless()" is just
         going to toggle the on/off switch, it doesn't configure the SSID,
         encryption and other important settings.
+
+    "$buf->dhcp($status)"
+        Turns the DHCP server on or off or queries its status:
+
+            $buf->dhcp("on");
+            $buf->dhcp("off");
+
+            if($buf->dhcp() eq "on") {
+                print "dhcp is on!\n";
+            }
 
 LEGALESE
     Copyright 2006 by Mike Schilli, all rights reserved. This program is
